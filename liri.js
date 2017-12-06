@@ -162,5 +162,35 @@ function movieThis() {
 
 // function if user asks for do what it says
 function doWhatItSays() {
-	console.log(command + ". do what it says, success");
+	// use fs package to read the file random.txt
+	fs.readFile("random.txt", "utf-8", function(error, data) {
+		// if error occurs, return the error
+		if (error) {
+			return console.log("Error Ocurred: " + error);
+		}
+
+		// if no error, split the data in the random.txt file at the , and save the 
+		// split data in the search params array
+		var searchParams = data.split(",");
+
+		// set command and movie/song to the respevitve index of searchParams array
+		command = searchParams[0];
+		movieOrSong = searchParams[1];
+
+		// switch case for running correct function based on the command
+		switch (command) {
+			case "my-tweets":
+				console.log("\nIt says: " + command + ". Searching...");
+				myTweets();
+				break;
+			case "spotify-this-song":
+				console.log("\nIt says: " + command + ". Searching for " + movieOrSong + ".");
+				spotifyThisSong();
+				break;
+			case "movie-this":
+				console.log("\nIt says: " + command + ". Searching for " + movieOrSong + ".");
+				movieThis();
+				break;
+		}
+	});
 }
