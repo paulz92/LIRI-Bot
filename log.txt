@@ -1,12 +1,1 @@
 Command and Response Log
----------------------------------------------------
-movie-this, the departed
-
-Title: The Departed
-Year: 2006
-IMDB Rating: 8.5/10
-Rotten Tomatoes Rating: 91%
-Country: USA, Hong Kong
-Language: English, Cantonese
-Plot: An undercover cop and a mole in the police attempt to identify each other while infiltrating an Irish gang in South Boston.
-Actors: Leonardo DiCaprio, Matt Damon, Jack Nicholson, Mark Wahlberg
