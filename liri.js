@@ -63,6 +63,9 @@ switch (command) {
 
 // function if user asks for tweets
 function myTweets() {
+	// run append command function
+	appendCommand();
+
 	// get statuses/user timeline for the alias screen name I created. max 20 tweets.
 	// tweet mode extended so that the API doesn't truncate tweets over 140 characters
 	client
@@ -72,25 +75,50 @@ function myTweets() {
 		if (err) {
 			return console.log("Error occurred: " + err);
 		}
-		// looping through tweets object, console log the time stamp of tweet + tweet
-		// followed by an empty line for aesthetics
+		// looping through tweets object, console log/append the time stamp of tweet 
+		// + tweet followed by an empty line for aesthetics
 		// looping in reverse order so oldest tweet is at top
 		for (var i = tweets.length - 1; i >= 0; i--) {
-			console.log("\nOn " +	tweets[i].created_at + ", " + tweets[i].user.name 
-				+ " tweeted: \n" + tweets[i].full_text);
+			// saving printed text as var
+			var printTweets = "\nOn " +	tweets[i].created_at + ", " + tweets[i].user.name 
+				+ " tweeted: \n" + tweets[i].full_text;
+
+			// logging them on node
+			console.log(printTweets);
+
+			// appending them to log.txt
+			fs.appendFile("log.txt", "\n" + printTweets, function(error) {
+				if (error) {
+					return console.log("Logging error: " + error);
+				}
+			});
 		}
 	});
 }
 
 // function if user asks for spotify
 function spotifyThisSong() {
+	// run append command function
+	appendCommand();
+
 	// if user didn't input a song, default to The Sign by Ace of Base
 	if (movieOrSong === "") {
-		console.log("\nNo song input! That's ok, check this song out." 
+		// save text
+		var noSong = "\nNo song input! That's ok, check this song out." 
 			+ " Next time, type a song name after your spotify-this-song command.\n\n" 
 			+ "Artist: Ace of Base\n" + "Song Title: The Sign\n" + "Album: The Sign\n" 
 			+ "Preview URL: https://p.scdn.co/mp3-preview/4c463359f67dd3546db7294d236" 
-			+ "dd0ae991882ff?cid=7bc14062ba5d492f9df0018efa9d9a03");
+			+ "dd0ae991882ff?cid=7bc14062ba5d492f9df0018efa9d9a03";
+		
+		// log it
+		console.log(noSong);
+
+		// append it to log.txt
+		fs.appendFile("log.txt", "\n" + noSong, function(error) {
+			if (error) {
+				return console.log("Logging error: " + error);
+			}
+		});
 	} 
 	// if user did input a song, run the following:
 	else {
@@ -104,16 +132,35 @@ function spotifyThisSong() {
 
 	  	// storing data.tracks.items[0] as it's needed to retrieve all relevant data
 			var songData = data.tracks.items[0];
-	  	// log the artist, song title, album
-			console.log("\nArtist(s): " + songData.artists[0].name);
-			console.log("Song Title: " + songData.name);
-			console.log("Album: " + songData.album.name);
-			// if spotify API returns null for preview, tell user no preview available,
-			// otherwise provide the preview URL
+
+	  	// save the artist, song title, album text
+			var songInfo = "\nArtist(s): " + songData.artists[0].name + "\nSong Title: " 
+				+ songData.name + "\nAlbum: " + songData.album.name;
+
+			// if spotify API returns null for preview, print songInfo and advise user 
+			// no preview available, otherwise provide the preview URL
 			if (songData.preview_url === null) {
-				console.log("No preview available for this song.");
+				// save text to print
+				var nullPreview = songInfo + "\nNo preview available for this song.";
+				// log it
+				console.log(nullPreview);
+				// append it to log.txt
+				fs.appendFile("log.txt", "\n" + nullPreview, function(error) {
+					if (error) {
+						return console.log("Logging error: " + error);
+					}
+				});
 			} else {
-				console.log("Preview URL: " + songData.preview_url);
+				// save text to print
+				var yesPreview = songInfo + "\nPreview URL: " + songData.preview_url;
+				// log it
+				console.log(yesPreview);
+				// append it to log.txt
+				fs.appendFile("log.txt", "\n" + yesPreview, function(error) {
+					if (error) {
+						return console.log("Logging error: " + error);
+					}		
+				});		
 			}
 		});
 	}
@@ -121,9 +168,13 @@ function spotifyThisSong() {
 
 // function if user asks for movies
 function movieThis() {
+	// run append command function
+	appendCommand();
+
 	// if user didn't input a movie, default to Mr. Nobody
 	if (movieOrSong === "") {
-		console.log("\nNo movie input! That's ok, check this movie out." 
+		// save text to print
+		var noMovie = "\nNo movie input! That's ok, check this movie out." 
 			+ " Next time, type a movie after your movie-this command.\n\n" 
 			+ "Title: Mr. Nobody\n" + "Year: 2009\n" + "IMDB Rating: 7.9/10\n" 
 			+ "Rotten Tomatoes Rating: 66%\n" 
@@ -132,7 +183,17 @@ function movieThis() {
 			+ " as a train is about to leave. Should he go with his mother or stay with" 
 			+ " his father? Infinite possibilities arise from this decision. As long as" 
 			+ " he doesn't choose, anything is possible.\n" 
-			+ "Actors: Jared Leto, Sarah Polley, Diane Kruger, Linh Dan Pham");
+			+ "Actors: Jared Leto, Sarah Polley, Diane Kruger, Linh Dan Pham";
+
+		// log it
+		console.log(noMovie);
+
+		// append it to log.txt
+		fs.appendFile("log.txt", "\n" + noMovie, function(error) {
+			if (error) {
+				return console.log("Logging error: " + error);
+			}
+		});
 		// if user did input a movie, run the following:
 	} else {
 		// building query url based around user input and my api key and saving it
@@ -142,15 +203,24 @@ function movieThis() {
 		request(queryURL, function(error, response, body) {
 			// If no errors and the request is successful
   		if (!error && response.statusCode === 200) {
-  			// parse through the body and log the relevant data for movie input
-  			console.log("\nTitle: " + JSON.parse(body).Title);
-  			console.log("Year: " + JSON.parse(body).Year);
-  			console.log("IMDB Rating: " + JSON.parse(body).Ratings[0].Value);
-  			console.log("Rotten Tomatoes Rating: " + JSON.parse(body).Ratings[1].Value);
-  			console.log("Country: " + JSON.parse(body).Country);
-  			console.log("Language: " + JSON.parse(body).Language);
-  			console.log("Plot: " + JSON.parse(body).Plot);
-  			console.log("Actors: " + JSON.parse(body).Actors);
+  			// parse through the body and save the relevant data for movie input
+  			var movieInfo = "\nTitle: " + JSON.parse(body).Title + "\nYear: " 
+  				+ JSON.parse(body).Year + "\nIMDB Rating: " 
+  				+ JSON.parse(body).Ratings[0].Value + "\nRotten Tomatoes Rating: " 
+  				+ JSON.parse(body).Ratings[1].Value + "\nCountry: " 
+  				+ JSON.parse(body).Country + "\nLanguage: " + JSON.parse(body).Language 
+  				+ "\nPlot: " + JSON.parse(body).Plot + "\nActors: " 
+  				+ JSON.parse(body).Actors;
+
+  			// log it
+  			console.log(movieInfo);
+
+  			// append it to log.txt
+  			fs.appendFile("log.txt", "\n" + movieInfo, function(error) {
+					if (error) {
+						return console.log("Logging error: " + error);
+					}		
+				});
   		} 
   		// if the request wasn't successful, return the error
   		else {
@@ -162,6 +232,9 @@ function movieThis() {
 
 // function if user asks for do what it says
 function doWhatItSays() {
+	// run append command function to log do-what-it-says
+	appendCommand();
+
 	// use fs package to read the file random.txt
 	fs.readFile("random.txt", "utf-8", function(error, data) {
 		// if error occurs, return the error
@@ -192,5 +265,17 @@ function doWhatItSays() {
 				movieThis();
 				break;
 		}
+	});
+}
+
+// function to append the command and the movie or song to log.txt
+function appendCommand() {
+	fs.appendFile("log.txt", "\n---------------------------------------------------\n" 
+		+ command + ", " + movieOrSong, function(error) {
+			if (error) {
+				return console.log("Append command error: " + error);
+			}
+
+			console.log("Command successfully logged in log.txt.");
 	});
 }
