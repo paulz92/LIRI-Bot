@@ -18,7 +18,7 @@ A simple, easy to use, command line Node app for users to request a series of tw
 - Clone the LIRI-Bot repository to your machine
 - While inside the cloned repository, run the following to install the npm package dependencies 
 
-	npm install
+		npm install
 
 - You're ready to go!
 
